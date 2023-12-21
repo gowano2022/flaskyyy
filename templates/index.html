@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Send Textbox Value to Storage</title>
+  <title>Attendance Form</title>
 </head>
 <body>
-  <form action="/send_to_storage" method="POST">
-    <label for="textbox">Enter Text:</label><br>
-    <input type="text" id="textbox" name="textbox"><br><br>
-    <input type="submit" value="Send to Storage">
+
+  <h1>Attendance Form</h1>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>
+      {{ form.name.label }}<br>
+      {{ form.name }}
+    </p>
+
+    <p>{{ form.submit() }}</p>
+
   </form>
+
 </body>
 </html>
