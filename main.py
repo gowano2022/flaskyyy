@@ -1,24 +1,35 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from telegram import Bot
 
-import firebase_admin
-from firebase_admin import credentials, storage
+# Telegram bot setup
+bot = Bot(token="6941631904:AAHfNlGSRsCLs23y6QMtFoq_p9o8p1gEW9w")
 
-# Initialize Firebase app
-cred = credentials.Certificate('dddy-e3783-508d0fdd782e.json')
-firebase_admin.initialize_app(cred, {'storageBucket': 'dddy-e3783.appspot.com'})
-
+# Flask app
 app = Flask(__name__)
 
-@app.route('/write-file')
-def write_file():
-    # Get a reference to the file you want to write to
-    bucket = storage.bucket()
-    file_blob = bucket.blob('a.txt')
+# Form
+class AttendanceForm(FlaskForm):
+   name = StringField('Name')
+   submit = SubmitField('Submit')
+   
+@app.route('/', methods=['GET', 'POST'])  
+def index():
 
-    # Write content to the file
-    file_blob.upload_from_string('Hello, world!', content_type='text/plain')
+   form = AttendanceForm()
+   
+   if form.validate_on_submit():
 
-    return 'File uploaded successfully.'
-
+      # Process form data   
+      name = form.name.data
+      
+      # Send message to Telegram bot
+      bot.send_message(chat_id="c3dspeed_bot", text=f"Name: {name}")
+      
+      return redirect('/')
+      
+   return render_template('index.html', form=form)
+   
 if __name__ == '__main__':
-    app.run()
+   app.run(debug=True)
